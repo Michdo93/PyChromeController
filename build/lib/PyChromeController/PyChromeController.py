@@ -134,14 +134,23 @@ class PyChromeController(object):
             print(f"Error closing browser: {e}")
             return False
 
-    def open_tab(self, url: str) -> bool:
+    def open_url(self, url: str) -> bool:
+        """
+        Opens the specified URL inside the current tab.
+
+        :param url: URL to open in the new tab.
+        :return: True if the operation is successful, False otherwise.
+        """
+        self.driver.get(url)
+        return True
+
+    def open_new_tab(self, url: str) -> bool:
         """
         Opens a new tab with the specified URL.
 
         :param url: URL to open in the new tab.
         :return: True if the operation is successful, False otherwise.
         """
-        self.close_tab_by_url("data:,")
         try:
             self.driver.execute_script(f"window.open('{url}');")
             return True
@@ -155,7 +164,6 @@ class PyChromeController(object):
 
         :return: Always returns True.
         """
-        self.close_tab_by_url("data:,")
         self.maximize_window()
         pyautogui.hotkey("ctrl", "t")
         time.sleep(0.5)

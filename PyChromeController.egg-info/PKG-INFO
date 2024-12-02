@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: PyChromeController
-Version: 0.1.1
+Version: 0.1.2
 Summary: A Python package to control Chrome browser actions.
 Home-page: https://github.com/Michdo93/PyChromeController
 Author: Michael Christian Dörflinger
