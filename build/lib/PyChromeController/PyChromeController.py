@@ -46,6 +46,7 @@ class PyChromeController(object):
                 command_executor=self.command_executor,  # Server address
                 options=self.options
             )
+            self.session_id = self.driver.session_id
             return True
         except Exception as e:
             print(f"Error starting browser session: {e}")
@@ -75,6 +76,7 @@ class PyChromeController(object):
                 self.driver.session_id = self.session_id
             else:
                 self.driver.session_id = session_id
+            self.session_id = self.driver.session_id
             return True
         except Exception as e:
             print(f"Error attaching browser session: {e}")
@@ -139,6 +141,7 @@ class PyChromeController(object):
         :param url: URL to open in the new tab.
         :return: True if the operation is successful, False otherwise.
         """
+        self.close_tab_by_url("data:,")
         try:
             self.driver.execute_script(f"window.open('{url}');")
             return True
@@ -152,6 +155,7 @@ class PyChromeController(object):
 
         :return: Always returns True.
         """
+        self.close_tab_by_url("data:,")
         self.maximize_window()
         pyautogui.hotkey("ctrl", "t")
         time.sleep(0.5)
