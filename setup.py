@@ -9,7 +9,7 @@ setup(
     author="Michael Christian Dörflinger",
     author_email="michaeldoerflinger93@gamil.com",
     license="MIT",
-    url="https://github.com/Michdo93/ChromeController",  # GitHub-Link
+    url="https://github.com/Michdo93/PyChromeController",  # GitHub-Link
     packages=find_packages(),  # Findet alle Packages (inkl. __init__.py)
     install_requires=open("requirements.txt").read().splitlines(),  # Abhängigkeiten
     classifiers=[
