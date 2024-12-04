@@ -136,9 +136,9 @@ class PyChromeController(object):
 
     def open_url(self, url: str) -> bool:
         """
-        Opens the specified URL inside the current tab.
+        Opens the specified URL inside the first tab.
 
-        :param url: URL to open in the new tab.
+        :param url: URL to open in the first tab.
         :return: True if the operation is successful, False otherwise.
         """
         self.driver.get(url)
