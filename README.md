@@ -139,7 +139,8 @@ else:
 ### 3. Open and Switch Tabs
 
 ```python
-controller.open_tab("https://example.com")  # Open a new tab with a URL
+controller.open_url("https://example.com") # Open a URL in the first tab
+controller.open_new_tab("https://example.com")  # Open a new tab with a URL
 controller.open_blank_tab()                # Open a blank tab
 controller.switch_tab(1)                   # Switch to the second tab (index starts at 0)
 controller.close_tab_by_title("Example")   # Close tab based on title
@@ -203,7 +204,9 @@ controller.close_browser()
 
 | **Method**                                                 | **Description**                                                                                                                                   | **Arguments**                                                                                                                                    | **Returns**                                    |
 |------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
-| `open_tab(url)`                                            | Opens a new tab with the specified URL.                                                                                                           | `url`: URL to open in the new tab.                                                                                                                | `None`                                         |
+| `open_url(url)`                                            | Opens the specified URL inside the first tab.                                                                                                         | `url`: URL to open in the new tab.                                                                                                                | `None`                                         |
+| `open_new_tab(url)`                                        | Opens a new tab with the specified URL.                                                                                                           | `url`: URL to open in the new tab.                                                                                                                | `None`                                         |
+
 | `open_blank_tab()`                                         | Opens a new blank tab.                                                                                                                            | None                                                                                                                                             | `None`                                         |
 | `close_tab()`                                              | Closes the currently active tab.                                                                                                                  | None                                                                                                                                             | `None`                                         |
 | `close_first_tab()`                                        | Closes the first tab.                                                                                                                             | None                                                                                                                                             | `None`                                         |
