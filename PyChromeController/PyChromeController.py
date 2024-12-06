@@ -569,7 +569,7 @@ class PyChromeController(object):
         if self.check_url_in_list(target_url):
             self.switch_tab_by_url(target_url)
         else:
-            self.open_tab(target_url)
+            self.open_new_tab(target_url)
 
     def check_and_open_tab_by_title(self, target_title: str, target_url: str) -> None:
         """
@@ -586,7 +586,7 @@ class PyChromeController(object):
         if self.check_url_in_title(target_title):
             self.switch_tab_by_url(target_title)
         else:
-            self.open_tab(target_url)
+            self.open_new_tab(target_url)
 
     def write_and_enter_url(self, url: str) -> None:
         """
