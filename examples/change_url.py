@@ -15,7 +15,7 @@ def test():
 
     time.sleep(3)
 
-    controller.change_url_of_tab("https://www.instagram.com", 2)
+    controller.change_url_of_tab("https://www.instagram.com", 1)
 
     time.sleep(2)
   

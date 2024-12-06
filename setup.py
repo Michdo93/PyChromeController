@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="PyChromeController",  # Name des Packages
-    version="0.1.2",  # Versionsnummer
+    version="0.1.3",  # Versionsnummer
     description="A Python package to control Chrome browser actions.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",  # Format der README

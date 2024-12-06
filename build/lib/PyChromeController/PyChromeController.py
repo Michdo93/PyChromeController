@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from urllib.parse import urlparse
 import subprocess
 import pyautogui
 import pyperclip
@@ -41,6 +42,9 @@ class PyChromeController(object):
             self.options.add_argument("--ignore-certificate-errors")  # Ignore certificate errors
             self.options.add_argument("--disable-popup-blocking")    # Prevent pop-ups
 
+            # Performance-Logs in den Optionen aktivieren
+            self.options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
+
             # Connect with the Remote WebDriver
             self.driver = webdriver.Remote(
                 command_executor=self.command_executor,  # Server address
@@ -64,6 +68,9 @@ class PyChromeController(object):
             self.options.headless = self.headless
             self.options.add_argument("--ignore-certificate-errors")  # Ignore certificate errors
             self.options.add_argument("--disable-popup-blocking")    # Prevent pop-ups
+
+            # Performance-Logs in den Optionen aktivieren
+            self.options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
             self.driver = webdriver.Remote(
                 command_executor=self.command_executor,
@@ -136,15 +143,15 @@ class PyChromeController(object):
 
     def open_url(self, url: str) -> bool:
         """
-        Opens the specified URL inside the current tab.
+        Opens the specified URL inside the first tab.
 
-        :param url: URL to open in the new tab.
+        :param url: URL to open in the first tab.
         :return: True if the operation is successful, False otherwise.
         """
         self.driver.get(url)
         return True
-
-    def open_new_tab(self, url: str) -> bool:
+        
+    def open_new_tab(self, url):
         """
         Opens a new tab with the specified URL.
 
@@ -152,8 +159,24 @@ class PyChromeController(object):
         :return: True if the operation is successful, False otherwise.
         """
         try:
+            # Check if the browser is still active
+            if not self.driver.window_handles:
+                print("No active browser windows found.")
+                return False
+
+            # Open a new tab using JavaScript
             self.driver.execute_script(f"window.open('{url}');")
-            return True
+        
+            # Wait briefly to ensure the new tab is registered
+            time.sleep(1)
+
+            # Verify if the tab was successfully added
+            if len(self.driver.window_handles) > 0:
+                print(f"Tab successfully opened with URL: {url}")
+                return True
+            else:
+                print("Failed to open the new tab.")
+                return False
         except Exception as e:
             print(f"Error opening tab with URL '{url}': {e}")
             return False
@@ -201,22 +224,43 @@ class PyChromeController(object):
         """
         try:
             self.driver.close()
+            self.driver.switch_to.window(self.driver.window_handles[-1])
             return True
         except Exception as e:
             print(f"Error closing tab: {e}")
             return False
 
-    def close_tab_by_index(self, index: int = 0) -> bool:
+    def close_tab_by_index(self, index):
         """
-        Closes a tab based on the index.
+        Closes a tab by its index in the window_handles list.
 
-        :param index: Index of the tab to close (default is 0).
-        :return: True if the tab is closed successfully, False otherwise.
+        :param index: Index of the tab to close.
+        :return: True if the operation is successful, False otherwise.
         """
-        if self.switch_tab(index):
-            return self.close_tab()
-        print(f"Failed to close tab at index {index}.")
-        return False
+        try:
+            # Ensure there are active tabs
+            if not self.driver.window_handles:
+                print("No active tabs to close.")
+                return False
+            
+            # Validate the index
+            if index < 0 or index >= len(self.driver.window_handles):
+                print(f"Invalid index: {index}. Total tabs: {len(self.driver.window_handles)}")
+                return False
+
+            # Switch to the desired tab
+            self.driver.switch_to.window(self.driver.window_handles[index])
+
+            # Close the tab
+            self.driver.close()
+            print(f"Tab at index {index} closed.")
+            
+            self.driver.switch_to.window(self.driver.window_handles[-1])
+            
+            return True
+        except Exception as e:
+            print(f"Error closing tab at index {index}: {e}")
+            return False
 
     def close_tab_by_url(self, target_url: str) -> bool:
         """
@@ -280,14 +324,16 @@ class PyChromeController(object):
     def switch_tab_by_url(self, target_url: str) -> bool:
         """
         Switches to a tab based on its URL.
-
         :param target_url: URL of the tab to switch to.
         :return: True if the tab with the specified URL is found and switched, False otherwise.
         """
         try:
+            target_netloc = urlparse(target_url).netloc  # Extrahiere Hostname der Ziel-URL
             for window in self.driver.window_handles:
                 self.driver.switch_to.window(window)
-                if self.driver.current_url == target_url:
+                current_url = self.driver.current_url
+                current_netloc = urlparse(current_url).netloc  # Extrahiere Hostname der aktuellen URL
+                if target_netloc in current_netloc:  # Vergleiche nur Hostnames
                     print(f"Tab with URL '{target_url}' found and switched.")
                     return True
             print(f"No tab with URL '{target_url}' found.")
@@ -526,10 +572,8 @@ class PyChromeController(object):
         Returns:
             None
         """
-        if self.check_url_in_list(target_url):
-            self.switch_tab_by_url(target_url)
-        else:
-            self.open_tab(target_url)
+        if not self.switch_tab_by_url(target_url):
+            self.open_new_tab(target_url)
 
     def check_and_open_tab_by_title(self, target_title: str, target_url: str) -> None:
         """
@@ -543,10 +587,8 @@ class PyChromeController(object):
         Returns:
             None
         """
-        if self.check_url_in_title(target_title):
-            self.switch_tab_by_url(target_title)
-        else:
-            self.open_tab(target_url)
+        if not self.switch_tab_by_title(target_title):
+            self.open_new_tab(target_url)
 
     def write_and_enter_url(self, url: str) -> None:
         """
@@ -569,6 +611,7 @@ class PyChromeController(object):
             pyautogui.write("https:", interval=0.1)
             pyautogui.hotkey("shift", "7")
             pyautogui.hotkey("shift", "7")
+            url = url.replace("https://", "", 1)
         elif "http://" in url:
             pyautogui.write("http:", interval=0.1)
             pyautogui.hotkey("shift", "7")
@@ -583,7 +626,7 @@ class PyChromeController(object):
             if url:  # Only split if there is actually a path
                 url = url.split("/")
         else:
-            print(url)  # If there is no "/", just enter the URL
+            pyautogui.write(url, interval=0.1)  # If there is no "/", just enter the URL
             url = []  # Empty list to execute the following code cleanly
 
         # Enter the remaining parts of the URL
@@ -945,7 +988,8 @@ class PyChromeController(object):
         """
         try:
             logs = self.driver.get_log("performance")
-            return logs
+            network_logs = [entry for entry in logs if "Network" in entry["message"]]
+            return network_logs
         except Exception as e:
             print(f"Error fetching network logs: {e}")
             return []
