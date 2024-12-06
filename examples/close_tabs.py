@@ -15,7 +15,7 @@ def test():
 
     time.sleep(3)
 
-    controller.close_tab_by_index(2)
+    controller.close_tab_by_index(1)
     controller.close_first_tab()
     controller.close_last_tab()
 
@@ -37,6 +37,8 @@ def test():
     controller.open_new_tab("https://www.google.com")
     controller.open_new_tab("https://www.github.com")
     controller.open_new_tab("https://facebook.com")
+
+    time.sleep(3)
 
     controller.close_all_other_tabs()
 
