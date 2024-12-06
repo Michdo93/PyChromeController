@@ -1,4 +1,5 @@
 from PyChromeController import PyChromeController
+import time
 
 def test_get_all_cookies():
     controller = PyChromeController()
