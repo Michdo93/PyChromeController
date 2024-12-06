@@ -7,7 +7,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from urllib.parse import urlparse
 import subprocess
 import pyautogui
@@ -43,14 +42,13 @@ class PyChromeController(object):
             self.options.add_argument("--ignore-certificate-errors")  # Ignore certificate errors
             self.options.add_argument("--disable-popup-blocking")    # Prevent pop-ups
 
-            caps = DesiredCapabilities.CHROME.copy()
-            caps["goog:loggingPrefs"] = {"performance": "ALL"}
+            # Performance-Logs in den Optionen aktivieren
+            self.options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
             # Connect with the Remote WebDriver
             self.driver = webdriver.Remote(
                 command_executor=self.command_executor,  # Server address
-                options=self.options,
-                desired_capabilities=caps
+                options=self.options
             )
             self.session_id = self.driver.session_id
             return True
@@ -71,13 +69,12 @@ class PyChromeController(object):
             self.options.add_argument("--ignore-certificate-errors")  # Ignore certificate errors
             self.options.add_argument("--disable-popup-blocking")    # Prevent pop-ups
 
-            caps = DesiredCapabilities.CHROME.copy()
-            caps["goog:loggingPrefs"] = {"performance": "ALL"}
+            # Performance-Logs in den Optionen aktivieren
+            self.options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
             self.driver = webdriver.Remote(
                 command_executor=self.command_executor,
-                options=self.options,
-                desired_capabilities=caps
+                options=self.options
             )
 
             self.driver.close()
