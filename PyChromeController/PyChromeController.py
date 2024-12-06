@@ -217,6 +217,7 @@ class PyChromeController(object):
         """
         try:
             self.driver.close()
+            self.driver.switch_to.window(self.driver.window_handles[-1])
             return True
         except Exception as e:
             print(f"Error closing tab: {e}")
@@ -247,9 +248,7 @@ class PyChromeController(object):
             self.driver.close()
             print(f"Tab at index {index} closed.")
             
-            # Switch back to another tab if tabs remain
-            if self.driver.window_handles:
-                self.driver.switch_to.window(self.driver.window_handles[0])
+            self.driver.switch_to.window(self.driver.window_handles[-1])
             
             return True
         except Exception as e:
