@@ -27,10 +27,10 @@ def test():
 
     time.sleep(1)
 
-    check_and_open_tab_by_title("Domain", "https://www.example.com")
+    controller.check_and_open_tab_by_title("Domain", "https://www.example.com")
 
     time.sleep(1)
 
-    check_and_open_tab_by_title("YouTube", "https://www.youtube.com/")
+    controller.check_and_open_tab_by_title("YouTube", "https://www.youtube.com/")
 
 test()
