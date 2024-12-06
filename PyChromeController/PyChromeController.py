@@ -222,17 +222,39 @@ class PyChromeController(object):
             print(f"Error closing tab: {e}")
             return False
 
-    def close_tab_by_index(self, index: int = 0) -> bool:
+    def close_tab_by_index(self, index):
         """
-        Closes a tab based on the index.
+        Closes a tab by its index in the window_handles list.
 
-        :param index: Index of the tab to close (default is 0).
-        :return: True if the tab is closed successfully, False otherwise.
+        :param index: Index of the tab to close.
+        :return: True if the operation is successful, False otherwise.
         """
-        if self.switch_tab(index):
-            return self.close_tab()
-        print(f"Failed to close tab at index {index}.")
-        return False
+        try:
+            # Ensure there are active tabs
+            if not self.driver.window_handles:
+                print("No active tabs to close.")
+                return False
+            
+            # Validate the index
+            if index < 0 or index >= len(self.driver.window_handles):
+                print(f"Invalid index: {index}. Total tabs: {len(self.driver.window_handles)}")
+                return False
+
+            # Switch to the desired tab
+            self.driver.switch_to.window(self.driver.window_handles[index])
+
+            # Close the tab
+            self.driver.close()
+            print(f"Tab at index {index} closed.")
+            
+            # Switch back to another tab if tabs remain
+            if self.driver.window_handles:
+                self.driver.switch_to.window(self.driver.window_handles[0])
+            
+            return True
+        except Exception as e:
+            print(f"Error closing tab at index {index}: {e}")
+            return False
 
     def close_tab_by_url(self, target_url: str) -> bool:
         """
