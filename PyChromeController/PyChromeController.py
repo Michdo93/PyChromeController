@@ -624,7 +624,7 @@ class PyChromeController(object):
             if url:  # Only split if there is actually a path
                 url = url.split("/")
         else:
-            print(url)  # If there is no "/", just enter the URL
+            pyautogui.write(url, interval=0.1)  # If there is no "/", just enter the URL
             url = []  # Empty list to execute the following code cleanly
 
         # Enter the remaining parts of the URL
