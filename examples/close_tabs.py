@@ -11,7 +11,7 @@ def test():
     controller.open_url("https://www.example.com")
     controller.open_new_tab("https://www.google.com")
     controller.open_new_tab("https://www.github.com")
-    controller.open_url("https://facebook.com")
+    controller.open_new_tab("https://facebook.com")
 
     time.sleep(3)
 
@@ -24,7 +24,7 @@ def test():
     controller.open_new_tab("https://www.example.com")
     controller.open_new_tab("https://www.google.com")
     controller.open_new_tab("https://www.github.com")
-    controller.open_url("https://facebook.com")
+    controller.open_new_tab("https://facebook.com")
 
     time.sleep(3)
 
@@ -36,7 +36,7 @@ def test():
     controller.open_new_tab("https://www.example.com")
     controller.open_new_tab("https://www.google.com")
     controller.open_new_tab("https://www.github.com")
-    controller.open_url("https://facebook.com")
+    controller.open_new_tab("https://facebook.com")
 
     controller.close_all_other_tabs()
 
