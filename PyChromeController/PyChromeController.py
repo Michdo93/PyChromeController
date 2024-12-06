@@ -327,7 +327,7 @@ class PyChromeController(object):
                 self.driver.switch_to.window(window)
                 current_url = self.driver.current_url
                 current_netloc = urlparse(current_url).netloc  # Extrahiere Hostname der aktuellen URL
-                if target_netloc == current_netloc:  # Vergleiche nur Hostnames
+                if target_netloc in current_netloc:  # Vergleiche nur Hostnames
                     print(f"Tab with URL '{target_url}' found and switched.")
                     return True
             print(f"No tab with URL '{target_url}' found.")
