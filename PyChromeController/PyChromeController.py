@@ -606,6 +606,7 @@ class PyChromeController(object):
             pyautogui.write("https:", interval=0.1)
             pyautogui.hotkey("shift", "7")
             pyautogui.hotkey("shift", "7")
+            url = url.replace("https://", "", 1)
         elif "http://" in url:
             pyautogui.write("http:", interval=0.1)
             pyautogui.hotkey("shift", "7")
