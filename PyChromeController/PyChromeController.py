@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from urllib.parse import urlparse
 import subprocess
 import pyautogui
 import pyperclip
@@ -317,14 +318,16 @@ class PyChromeController(object):
     def switch_tab_by_url(self, target_url: str) -> bool:
         """
         Switches to a tab based on its URL.
-
         :param target_url: URL of the tab to switch to.
         :return: True if the tab with the specified URL is found and switched, False otherwise.
         """
         try:
+            target_netloc = urlparse(target_url).netloc  # Extrahiere Hostname der Ziel-URL
             for window in self.driver.window_handles:
                 self.driver.switch_to.window(window)
-                if self.driver.current_url == target_url:
+                current_url = self.driver.current_url
+                current_netloc = urlparse(current_url).netloc  # Extrahiere Hostname der aktuellen URL
+                if target_netloc == current_netloc:  # Vergleiche nur Hostnames
                     print(f"Tab with URL '{target_url}' found and switched.")
                     return True
             print(f"No tab with URL '{target_url}' found.")
