@@ -143,8 +143,8 @@ class PyChromeController(object):
         """
         self.driver.get(url)
         return True
-
-    def open_new_tab(self, url: str) -> bool:
+        
+    def open_new_tab(self, url):
         """
         Opens a new tab with the specified URL.
 
@@ -152,8 +152,24 @@ class PyChromeController(object):
         :return: True if the operation is successful, False otherwise.
         """
         try:
+            # Check if the browser is still active
+            if not self.driver.window_handles:
+                print("No active browser windows found.")
+                return False
+
+            # Open a new tab using JavaScript
             self.driver.execute_script(f"window.open('{url}');")
-            return True
+        
+            # Wait briefly to ensure the new tab is registered
+            time.sleep(1)
+
+            # Verify if the tab was successfully added
+            if len(self.driver.window_handles) > 0:
+                print(f"Tab successfully opened with URL: {url}")
+                return True
+            else:
+                print("Failed to open the new tab.")
+                return False
         except Exception as e:
             print(f"Error opening tab with URL '{url}': {e}")
             return False
