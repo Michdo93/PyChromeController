@@ -12,6 +12,7 @@ import subprocess
 import pyautogui
 import pyperclip
 import time
+import os
 
 class PyChromeController(object):
 
@@ -1173,3 +1174,45 @@ class PyChromeController(object):
             if time.time() - start_time > timeout:
                 print(f"Timeout: No tab with the image {image_path} found.")
                 return False  # Timeout reached, image not found
+
+    def is_valid_ip_address(self, ip):
+        """
+        Checks whether the input is a valid IP address.
+        """
+        parts = ip.split('.')
+        if len(parts) != 4:  # IP address must consist of exactly 4 parts
+            return False
+        for part in parts:
+            if not part.isdigit() or not 0 <= int(part) <= 255:
+                return False
+        return True
+
+    def prepare_url(self, input_path_or_url):
+        """
+        Checks an input to see whether it is a URL or a local file path,
+        and adds 'file://' for local paths if necessary.
+
+        :param input_path_or_url: The URL or local path
+        :return: A valid URL or a file path with 'file://'
+        """
+        if not isinstance(input_path_or_url, str):
+            raise ValueError("The input must be a string.")
+
+        # Parse the input
+        parsed = urlparse(input_path_or_url)
+
+        # Check whether it is already a complete URL
+        if parsed.scheme in ('http', 'https', 'file'):
+            return input_path_or_url  # Already a valid URL or file URL
+
+        # Check whether it is a web address without a scheme
+        if "." in input_path_or_url and not os.path.exists(input_path_or_url):
+            return f"http://{input_path_or_url}"  # Add 'http://' by default
+
+        # Check whether it is a valid IP address
+        if is_valid_ip_address(input_path_or_url):
+            return f"http://{input_path_or_url}"  # Add 'http://' by default
+
+        # If none of the above conditions apply, it is probably a local path
+        absolute_path = os.path.abspath(input_path_or_url)  # Determine absolute path
+        return f"file://{absolute_path}"  # Add file://
