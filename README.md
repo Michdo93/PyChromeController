@@ -275,8 +275,7 @@ controller.close_browser()
 | `take_screenshot(file_name)`             | Captures a screenshot of the browser.                        | `file_name`: The name of the file to save the screenshot.                                                                                       | `None`                                         |
 | `scroll_to_element(by, locator)`         | Scrolls to a specific element on the page.                    | `by`: Locator method (e.g., `By.ID`, `By.XPATH`). <br> `locator`: Locator string.                                                              | `None`                                         |
 | `is_valid_ip_address(ip)`         | Checks whether the input is a valid IP address.                    | `by`: IP address (e.g., `192.168.0.1`).                                                             | `bool`: `True` if it is an IP address, `False` if it not an IP address.                                         |
-| `prepare_url(input_path_or_url)`        Checks an input to see whether it is a URL or a local file path,
-    and adds 'file://' for local paths if necessary.                    | `input_path_or_url`: The URL or local path (e.g., `www.google.com`, `/var/www/index.html`).                                                              | `str`: A valid URL or a file path with 'file://'                                        |
+| `prepare_url(input_path_or_url)`        Checks an input to see whether it is a URL or a local file path, and adds 'file://' for local paths if necessary.                    | `input_path_or_url`: The URL or local path (e.g., `www.google.com`, `/var/www/index.html`).                                                              | `str`: A valid URL or a file path with 'file://'                                        |
 
 
 ### Console and Network Logs
